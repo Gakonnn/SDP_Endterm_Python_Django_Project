@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .table-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .empty-message {
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+        .toggle-button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none; /* Скрыто по умолчанию */
+        }
+    </style>
+    <script>
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Order List</h1>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>User Email</th>
+                <th>Status</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user_email }}</td>
+                <td>{{ order.status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="empty-message">No orders found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <button class="toggle-button" onclick="toggleForm('orderForm')">Add Order</button>
+    <div id="orderForm" class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ order_form.as_p }}
+            <button type="submit" name="order_form">Submit Order</button>
+        </form>
+    </div>
+
+    <h1>Product List</h1>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Product Price</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="empty-message">No products found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <button class="toggle-button" onclick="toggleForm('productForm')">Add Product</button>
+    <div id="productForm" class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ product_form.as_p }}
+            <button type="submit" name="product_form">Submit Product</button>
+        </form>
+    </div>
+</body>
+</html>
